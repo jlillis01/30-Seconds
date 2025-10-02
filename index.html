@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 Years in 30 Seconds</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #FF98F3 0%, #B42EA3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 30px;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .timer-section {
+            margin-bottom: 40px;
+        }
+
+        .timer-display {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .timer-display.warning {
+            color: #FFD700;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .btn {
+            background: #B42EA3;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background: #8B2380;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.reset {
+            background: #FF6B6B;
+        }
+
+        .btn.reset:hover {
+            background: #FF5252;
+        }
+
+        .dice-section {
+            margin-top: 40px;
+        }
+
+        .dice {
+            width: 150px;
+            height: 150px;
+            background: white;
+            margin: 20px auto;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5em;
+            font-weight: bold;
+            color: #B42EA3;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .dice.rolling {
+            animation: roll 0.5s ease;
+        }
+
+        @keyframes roll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+        }
+
+        .roll-btn {
+            background: #FF98F3;
+            margin-top: 20px;
+        }
+
+        .roll-btn:hover {
+            background: #FF7FED;
+        }
+
+        .message-box {
+            margin-top: 20px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .message-box.show {
+            opacity: 1;
+        }
+
+        .character-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .character {
+            width: 120px;
+            height: 150px;
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .character img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 250px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .speech-bubble.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            bottom: 50%;
+            transform: translateY(50%);
+            width: 0;
+            height: 0;
+            border-right: 15px solid white;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .speech-bubble-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #B42EA3;
+            text-shadow: none;
+        }
+
+        .character-name {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .divider {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <img src="game_title.png" alt="Game Title" class="title-image">
+        
+        <div class="timer-section">
+            <h2>Countdown Timer</h2>
+            <div class="timer-display" id="timer">30</div>
+            <button class="btn" id="timerBtn" onclick="toggleTimer()">Start Timer</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="dice-section">
+            <h2>Roll the Dice, Feel the Spice!</h2>
+            <div class="dice" id="dice">?</div>
+            <button class="btn roll-btn" onclick="rollDice()">Roll Dice</button>
+            
+            <div class="character-container">
+                <div>
+                    <div class="character">
+                        <img src="character_game.png" alt="Game Character">
+                    </div>
+                    <div class="character-name">Tiffany McKeon</div>
+                </div>
+                
+                <div class="speech-bubble show" id="speechBubble">
+                    <div class="speech-bubble-text" id="message">I make a lot of money and a lot of people jealous.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let countdown;
+        let timeLeft = 30;
+        let isRunning = false;
+        let lastPhrase = ''; // Track the last phrase to avoid repeats
+
+        // Phrase lists for each dice number - ADD YOUR OWN PHRASES HERE!
+        const phrasesForMinus2 = [
+'Pipe down, you got a minus two!',
+'Did Muirenn roll that, cause even I wouldn\'t smoke it.',
+'Fucking hope I\'m not on your team.',
+'Your team is going to LOSE and it\'s going to be YOUR fault.',
+'You get what you deserve in this game.',
+'If I rolled that I\'d emigrate.',
+'Telpis.',
+'If I rolled that I\'d shoot myself.'
+        ];
+
+        const phrasesForMinus1 = [
+'I\'ve always said it, no talent.',
+'I\'d give up now if I were you.',
+'Minus one for an absolute HUN.',
+'I\'d drop to pass if I were you.',
+'If you worked for Uber I\'d fire you.',
+'Put the Child of Prague under a hedge and you\'ll get better luck.',
+'An average roll from an average person.',
+'That roll is just like you. FORGETABLE.',
+        ];
+
+        const phrasesForZero = [
+'You\'re still a dissapointment.',
+'Zero is the most I\'d expect from you tbh.',
+'I guess you\'re the one with the brain cell this evening.',
+'Maybe you\'re not a COMPLETE failure.',
+'Ken McKeon thinks you\'re over-rated.'
+        ];
+
+        function toggleTimer() {
+            if (isRunning) {
+                resetTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            isRunning = true;
+            timeLeft = 30;
+            const btn = document.getElementById('timerBtn');
+            btn.textContent = 'Reset Timer';
+            btn.classList.add('reset');
+            document.getElementById('timer').classList.remove('warning');
+            
+            countdown = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                
+                if (timeLeft <= 10 && timeLeft > 0) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    document.getElementById('timer').textContent = "TIME'S UP!";
+                    playAlarm();
+                    btn.textContent = 'Start Timer';
+                    btn.classList.remove('reset');
+                    isRunning = false;
+                    setTimeout(() => {
+                        document.getElementById('timer').textContent = "30";
+                        document.getElementById('timer').classList.remove('warning');
+                    }, 2000);
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
+            isRunning = false;
+            timeLeft = 30;
+            document.getElementById('timer').textContent = "30";
+            document.getElementById('timer').classList.remove('warning');
+            const btn = document.getElementById('timerBtn');
+            btn.textContent = 'Start Timer';
+            btn.classList.remove('reset');
+        }
+
+        function playAlarm() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }, i * 400);
+            }
+        }
+
+        function rollDice() {
+            const diceElement = document.getElementById('dice');
+            const messageElement = document.getElementById('message');
+            const speechBubble = document.getElementById('speechBubble');
+            diceElement.classList.add('rolling');
+            speechBubble.classList.remove('show');
+            
+            setTimeout(() => {
+                const result = Math.floor(Math.random() * 3) - 2;
+                diceElement.textContent = result;
+                diceElement.classList.remove('rolling');
+                
+                let message = '';
+                let phraseList = [];
+                
+                if (result === -2) {
+                    phraseList = phrasesForMinus2;
+                } else if (result === -1) {
+                    phraseList = phrasesForMinus1;
+                } else if (result === 0) {
+                    phraseList = phrasesForZero;
+                }
+                
+                // Pick a random phrase that's different from the last one
+                do {
+                    message = phraseList[Math.floor(Math.random() * phraseList.length)];
+                } while (message === lastPhrase && phraseList.length > 1);
+                
+                lastPhrase = message; // Save this phrase for next time
+                
+                messageElement.textContent = message;
+                speechBubble.classList.add('show');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
